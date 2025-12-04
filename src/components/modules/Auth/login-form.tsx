@@ -14,8 +14,9 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 
 
-const LoginForm = () => {
+const LoginForm = ({redirect}: {redirect?: string}) => {
   const [state, formAction, IsPending] = useActionState(loginUser, null);
+  console.log(state);
 
   const [formValues, setFormValues] = useState({ email: "", password: "" })
   
@@ -41,6 +42,7 @@ const LoginForm = () => {
   return (
     <form action={formAction}>
       <FieldGroup>
+        {redirect && <input type="hidden" name="redirect" value={redirect}></input>}
         <div className="grid grid-cols-1 gap-4">
           {/* Email */}
           <Field>
