@@ -11,7 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { registerPatient } from "@/services/auth/registerPatient";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const RegisterForm = () => {
     const [state, formAction, IsPending] = useActionState(registerPatient, null);
@@ -44,6 +45,12 @@ const RegisterForm = () => {
             return null
         }
     };
+
+    useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message)
+    }
+  }, [state]);
 
     return (
         <form action={formAction}>

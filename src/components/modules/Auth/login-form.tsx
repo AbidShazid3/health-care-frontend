@@ -11,21 +11,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/services/auth/loginUser";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 
-const LoginForm = ({redirect}: {redirect?: string}) => {
+const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, IsPending] = useActionState(loginUser, null);
-  console.log(state);
 
   const [formValues, setFormValues] = useState({ email: "", password: "" })
-  
+
   const handleChange = (e: any) => {
     setFormValues({
       ...formValues,
       [e.target.name]: e.target.value
-  })}
-  
+    })
+  }
+
   const getFieldError = (fileName: string) => {
     if (state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fileName)
@@ -38,6 +39,12 @@ const LoginForm = ({redirect}: {redirect?: string}) => {
       return null
     }
   };
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message)
+    }
+  }, [state]);
 
   return (
     <form action={formAction}>

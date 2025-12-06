@@ -3,10 +3,10 @@
 
 import z from "zod";
 import { parse } from "cookie";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
+import { setCookie } from "./tokenHandlers";
 
 const loginValidationZodSchema = z.object({
     email: z.
@@ -56,6 +56,8 @@ export const loginUser = async (_currentState: any, formData: any) => {
             }
         });
 
+        const result = await res.json();
+
         const setCookieHeaders = res.headers.getSetCookie();
         if (setCookieHeaders && setCookieHeaders.length > 0) {
             setCookieHeaders.forEach((cookie: string) => {
@@ -79,8 +81,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
             throw new Error("No token found in cookies")
         }
 
-        const cookieStore = await cookies();
-        cookieStore.set("accessToken", accessTokenObject.accessToken, {
+        await setCookie("accessToken", accessTokenObject.accessToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(accessTokenObject["Max-Age"]) || 1000 * 60 * 60,
@@ -88,7 +89,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
             sameSite: accessTokenObject["SameSite"] || "none"
         });
 
-        cookieStore.set("refreshToken", refreshTokenObject.refreshToken, {
+        await setCookie("refreshToken", refreshTokenObject.refreshToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(refreshTokenObject["Max-Age"]) || 1000 * 60 * 60 * 24 * 90,
@@ -104,25 +105,23 @@ export const loginUser = async (_currentState: any, formData: any) => {
 
         // ... after token verification
         const userRole: UserRole = verifiedToken.role;
-        const defaultDashboardPath = getDefaultDashboardRoute(userRole);
-        let finalRedirectPath: string;
+        if (!result.success) {
+            throw new Error(result.message || "Login failed");
+        }
 
         if (redirectTo) {
             const requestedPath = redirectTo.toString();
             // 1. If a redirect path is requested, check if the role is allowed to access it.
             if (isValidRedirectForRole(requestedPath, userRole)) {
-                finalRedirectPath = requestedPath;
+                redirect(`${requestedPath}?loggedIn=true`)
             } else {
                 // 2. If the user is NOT allowed, redirect them to their default dashboard.
-                finalRedirectPath = defaultDashboardPath;
+                redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`)
             }
         } else {
             // 3. If no redirect path was provided, redirect them to their default dashboard.
-            finalRedirectPath = defaultDashboardPath;
+            redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`)
         }
-
-        // ALWAYS perform the redirect here
-        redirect(finalRedirectPath);
 
     } catch (error: any) {
         // Re-throw NEXT_REDIRECT errors so Next.js can handle them
@@ -130,6 +129,6 @@ export const loginUser = async (_currentState: any, formData: any) => {
             throw error;
         }
         console.log(error);
-        return { error: "Login failed" }
+        return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Login Failed. You might have entered incorrect email or password."}` }
     }
 }
