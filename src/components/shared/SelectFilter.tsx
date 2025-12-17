@@ -1,0 +1,55 @@
+import { useRouter, useSearchParams } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useTransition } from "react";
+
+interface SelectFilterProps {
+    placeholder?: string;
+    paramName: string;
+    options: { label: string, value: string }[]
+}
+
+const SelectFilter = ({ placeholder, paramName, options }: SelectFilterProps) => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
+
+    const currentValue = searchParams.get(paramName) || "ALL"
+
+    const handleChange = (value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        if (value === "ALL") {
+            params.delete(paramName);
+        } else if (value) {
+            params.set(paramName, value);
+        } else {
+            params.delete(paramName);
+        }
+
+        startTransition(() => {
+            router.push(`?${params.toString()}`);
+        })
+    }
+
+    return (
+        <Select
+            value={currentValue}
+            onValueChange={handleChange}
+            disabled={isPending}
+        >
+            <SelectTrigger>
+                <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                {options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
+    );
+};
+
+export default SelectFilter;

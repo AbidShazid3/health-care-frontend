@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
+import InputFieldError from "@/components/shared/InputFieldError";
 import { Button } from "@/components/ui/button";
 import {
     Field,
@@ -33,19 +34,6 @@ const RegisterForm = () => {
         });
     };
 
-    const getFieldError = (fileName: string) => {
-        if (state && state.errors) {
-            const error = state.errors.find((err: any) => err.field === fileName)
-            if (error) {
-                return error.message;
-            } else {
-                return null
-            }
-        } else {
-            return null
-        }
-    };
-
     useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message)
@@ -65,11 +53,7 @@ const RegisterForm = () => {
                             value={formValues.name}
                             onChange={handleChange}
                             placeholder="John Doe" />
-                        {getFieldError("name") && (
-                            <FieldDescription className="text-red-600">
-                                {getFieldError("name")}
-                            </FieldDescription>
-                        )}
+                        <InputFieldError field="name" state={state} />
                     </Field>
                     {/* Address */}
                     <Field>
@@ -82,12 +66,7 @@ const RegisterForm = () => {
                             onChange={handleChange}
                             placeholder="123 Main St"
                         />
-
-                        {getFieldError("address") && (
-                            <FieldDescription className="text-red-600">
-                                {getFieldError("address")}
-                            </FieldDescription>
-                        )}
+                        <InputFieldError field="address" state={state} />
                     </Field>
                     {/* Email */}
                     <Field>
@@ -101,11 +80,7 @@ const RegisterForm = () => {
                             placeholder="m@example.com"
                         />
 
-                        {getFieldError("email") && (
-                            <FieldDescription className="text-red-600">
-                                {getFieldError("email")}
-                            </FieldDescription>
-                        )}
+                        <InputFieldError field="email" state={state} />
                     </Field>
                     {/* Password */}
                     <Field>
@@ -116,12 +91,7 @@ const RegisterForm = () => {
                             autoComplete="password"
                             value={formValues.password}
                             onChange={handleChange} />
-
-                        {getFieldError("password") && (
-                            <FieldDescription className="text-red-600">
-                                {getFieldError("password")}
-                            </FieldDescription>
-                        )}
+                        <InputFieldError field="password" state={state} />
                     </Field>
                     {/* Confirm Password */}
                     <Field className="md:col-span-2">
@@ -134,12 +104,7 @@ const RegisterForm = () => {
                             value={formValues.confirmPassword}
                             onChange={handleChange}
                         />
-
-                        {getFieldError("confirmPassword") && (
-                            <FieldDescription className="text-red-600">
-                                {getFieldError("confirmPassword")}
-                            </FieldDescription>
-                        )}
+                        <InputFieldError field="confirmPassword" state={state} />
                     </Field>
                 </div>
                 <FieldGroup className="mt-4">

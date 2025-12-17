@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import InputFieldError from "@/components/shared/InputFieldError";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -27,22 +28,9 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
     })
   }
 
-  const getFieldError = (fileName: string) => {
-    if (state && state.errors) {
-      const error = state.errors.find((err: any) => err.field === fileName)
-      if (error) {
-        return error.message;
-      } else {
-        return null
-      }
-    } else {
-      return null
-    }
-  };
-
   useEffect(() => {
     if (state && !state.success && state.message) {
-      toast.error(state.message)
+      toast.error(state.message);
     }
   }, [state]);
 
@@ -63,11 +51,7 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               onChange={handleChange}
             />
 
-            {getFieldError("email") && (
-              <FieldDescription className="text-red-600">
-                {getFieldError("email")}
-              </FieldDescription>
-            )}
+            <InputFieldError field="email" state={state} />
           </Field>
 
           {/* Password */}
@@ -82,11 +66,7 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               value={formValues.password}
               onChange={handleChange}
             />
-            {getFieldError("password") && (
-              <FieldDescription className="text-red-600">
-                {getFieldError("password")}
-              </FieldDescription>
-            )}
+            <InputFieldError field="password" state={state} />
           </Field>
         </div>
         <FieldGroup className="mt-4">
