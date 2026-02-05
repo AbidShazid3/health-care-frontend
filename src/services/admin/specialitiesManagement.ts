@@ -25,7 +25,7 @@ export async function createSpecialty(_prevState: any, formData: FormData) {
         }
 
         const response = await serverFetch.post("/specialties", {
-            body: formData
+            body: newFormData
         })
 
         const result = await response.json();

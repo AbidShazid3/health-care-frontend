@@ -87,27 +87,31 @@ function ManagementTable<T>({
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon">
+                                                    <Button className="cursor-pointer" variant="ghost" size="icon">
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     {onView && (
-                                                        <DropdownMenuItem onClick={() => onView(item)}>
+                                                        <DropdownMenuItem
+                                                            className="cursor-pointer"
+                                                            onClick={() => onView(item)}>
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View
                                                         </DropdownMenuItem>
                                                     )}
                                                     {onEdit && (
-                                                        <DropdownMenuItem onClick={() => onEdit(item)}>
+                                                        <DropdownMenuItem
+                                                            className="cursor-pointer"
+                                                            onClick={() => onEdit(item)}>
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </DropdownMenuItem>
                                                     )}
                                                     {onDelete && (
                                                         <DropdownMenuItem
+                                                            className="cursor-pointer text-destructive"
                                                             onClick={() => onDelete(item)}
-                                                            className="text-destructive"
                                                         >
                                                             <Trash className="mr-2 h-4 w-4" />
                                                             Delete

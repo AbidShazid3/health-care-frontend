@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 interface RefreshButtonProps {
-    size: "sm" | "default" | "lg";
+    size?: "sm" | "default" | "lg";
     variant?: "default" | "outline" | "ghost";
     showLabel?: boolean
 }
@@ -29,8 +29,10 @@ const RefreshButton = ({
         <Button size={size}
             variant={variant}
             onClick={handleRefresh}
-            disabled={isPending}>
-            <RefreshCcw className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "mr-2" : ""}`}/>
+            disabled={isPending}
+            className="cursor-pointer"
+        >
+            <RefreshCcw className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "mr-2" : ""}`} />
             {showLabel && "Refresh"}
         </Button>
     );

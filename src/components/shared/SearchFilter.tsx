@@ -1,6 +1,6 @@
 "use client"
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -42,6 +42,12 @@ const SearchFilter = ({
         });
     }, [debouncedValue, paramName, router, searchParams]);
 
+    // Clear button handler
+    const handleClear = () => {
+        setValue("");
+    };
+
+
     return (
         <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -52,6 +58,15 @@ const SearchFilter = ({
                 onChange={(e) => setValue(e.target.value)}
                 disabled={isPending}
             />
+            {value && (
+                <button
+                    onClick={handleClear}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center h-6 w-6 rounded-full bg-red-100 hover:bg-red-200 text-red-700 cursor-pointer"
+                    aria-label="Clear search"
+                >
+                    <X className="h-4 w-4" />
+                </button>
+            )}
         </div>
     );
 };

@@ -1,3 +1,5 @@
+"use client"
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useTransition } from "react";
@@ -37,11 +39,11 @@ const SelectFilter = ({ placeholder, paramName, options }: SelectFilterProps) =>
             onValueChange={handleChange}
             disabled={isPending}
         >
-            <SelectTrigger>
+            <SelectTrigger className="w-full max-w-40">
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="ALL">All</SelectItem>
                 {options.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                         {option.label}

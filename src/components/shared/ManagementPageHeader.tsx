@@ -31,7 +31,7 @@ const ManagementPageHeader = ({
         )}
       </div>
       {action && (
-        <Button onClick={action.onClick}>
+        <Button onClick={action.onClick} className="cursor-pointer">
           <Icon className="mr-2 h-4 w-4" />
           {action.label}
         </Button>
