@@ -10,7 +10,7 @@ import LogoutButton from "./LogoutButton";
 // Static data can live here or be imported
 const navigationLinks = [
     { href: "/", label: "Home" },
-    { href: "#", label: "Consultation" },
+    { href: "/consultation", label: "Consultation" },
     { href: "#", label: "Health Plans" },
     { href: "#", label: "Medicine" },
     { href: "#", label: "Diagnostics" },

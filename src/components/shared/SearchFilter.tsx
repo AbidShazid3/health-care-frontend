@@ -18,7 +18,7 @@ const SearchFilter = ({
     const [isPending, startTransition] = useTransition();
     const searchParams = useSearchParams();
     const [value, setValue] = useState(searchParams.get(paramName) || "");
-    const debouncedValue = useDebounce(value, 500);
+    const debouncedValue = useDebounce(value, 1000);
 
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -40,7 +40,8 @@ const SearchFilter = ({
         startTransition(() => {
             router.push(`?${params.toString()}`);
         });
-    }, [debouncedValue, paramName, router, searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedValue, paramName, router]);
 
     // Clear button handler
     const handleClear = () => {
@@ -49,7 +50,7 @@ const SearchFilter = ({
 
 
     return (
-        <div className="relative">
+        <div className="relative w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
                 placeholder={placeholder}

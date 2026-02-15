@@ -1,57 +1,67 @@
-"use client"
-
+"use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useTransition } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface SelectFilterProps {
-    placeholder?: string;
-    paramName: string;
-    options: { label: string, value: string }[]
+  paramName: string; // ?gender=
+  placeholder?: string;
+  defaultValue?: string;
+  options: { label: string; value: string }[];
 }
 
-const SelectFilter = ({ placeholder, paramName, options }: SelectFilterProps) => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const [isPending, startTransition] = useTransition();
+const SelectFilter = ({
+  paramName,
+  placeholder,
+  options,
+  defaultValue = "All",
+}: SelectFilterProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-    const currentValue = searchParams.get(paramName) || "ALL"
+  const currentValue = searchParams.get(paramName) || defaultValue;
 
-    const handleChange = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+  const handleChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-        if (value === "ALL") {
-            params.delete(paramName);
-        } else if (value) {
-            params.set(paramName, value);
-        } else {
-            params.delete(paramName);
-        }
-
-        startTransition(() => {
-            router.push(`?${params.toString()}`);
-        })
+    if (value === defaultValue) {
+      params.delete(paramName);
+    } else if (value) {
+      params.set(paramName, value);
+    } else {
+      params.delete(paramName);
     }
 
-    return (
-        <Select
-            value={currentValue}
-            onValueChange={handleChange}
-            disabled={isPending}
-        >
-            <SelectTrigger className="w-full max-w-40">
-                <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="ALL">All</SelectItem>
-                {options.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
-    );
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
+  };
+  return (
+    <Select
+      value={currentValue}
+      onValueChange={handleChange}
+      disabled={isPending}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={defaultValue}>{defaultValue}</SelectItem>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
 };
 
 export default SelectFilter;

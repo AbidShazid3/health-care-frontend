@@ -3,6 +3,7 @@ export interface IDoctor {
     name: string;
     email: string;
     password: string;
+    confirmPassword?: string;
     contactNumber: string;
     address?: string;
     registrationNumber: string;
@@ -12,12 +13,15 @@ export interface IDoctor {
     qualification: string;
     currentWorkingPlace: string;
     designation: string;
-    profilePhoto?: string;
+    specialties?: string[];
+    profilePhoto: File | string;
     isDeleted?: boolean;
     averageRating?: number;
     createdAt?: string;
     updatedAt?: string;
+    removeSpecialties?: string[];
     doctorSpecialties?: Array<{
+        specialtiesId: string;
         specialties?: {
             id: string;
             title: string;
